@@ -11,8 +11,6 @@ if __name__ == "__main__":
 
     df_train = pd.read_csv("../input/mitbih_train.csv", header=None)
 
-    df_train = df_train.sample(n=10000, random_state=1337)
-
     df = pd.read_csv("../input/mitbih_test.csv", header=None)
 
     df_test, df_val = train_test_split(df, test_size=0.2, random_state=1337)
@@ -32,7 +30,7 @@ if __name__ == "__main__":
     reduce = ReduceLROnPlateau(monitor="val_loss", patience=10, min_lr=1e-7, mode="min")
     early = EarlyStopping(monitor="val_loss", patience=30, mode="min")
 
-    model.fit(X_train, Y_train, validation_data=(X_val, Y_val), epochs=1000, verbose=1, batch_size=64,
+    model.fit(X_train, Y_train, validation_data=(X_val, Y_val), epochs=1000, verbose=2, batch_size=64,
               callbacks=[checkpoint, reduce, early])
 
     pred_test = model.predict(X_test)
