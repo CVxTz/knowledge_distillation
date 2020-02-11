@@ -45,7 +45,7 @@ if __name__ == "__main__":
     print("acc :", acc)
     print("f1 :", f1)
 
-    repeat = 10
+    repeat = 50
     pred_test = 0
 
     for _ in range(repeat):
@@ -59,3 +59,9 @@ if __name__ == "__main__":
 
     print("ensemble acc :", acc)
     print("ensemble f1 :", f1)
+
+    # acc : 0.9495232113287272
+    # f1 : 0.7290445243741424
+    # ensemble acc : 0.9572888711243076
+    # ensemble f1 : 0.7670295907670492
+
