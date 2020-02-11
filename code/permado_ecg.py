@@ -7,7 +7,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLRO
 from model import get_model
 
 if __name__ == "__main__":
-    file_path = "baseline.h5"
+    file_path = "permado.h5"
 
     df_train = pd.read_csv("../input/mitbih_train.csv", header=None)
 
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     Y_test = np.array(df_test[187].values).astype(np.int8)
     X_test = np.array(df_test[list(range(187))].values)[..., np.newaxis]
 
-    model = get_model()
+    model = get_model(use_normal_dropout=False)
 
     checkpoint = ModelCheckpoint(file_path, monitor='val_loss', verbose=1, save_best_only=True, mode="min")
     reduce = ReduceLROnPlateau(monitor="val_loss", patience=10, min_lr=1e-7, mode="min")
@@ -44,6 +44,18 @@ if __name__ == "__main__":
 
     print("acc :", acc)
     print("f1 :", f1)
-    # acc : 0.9582024781590818
-    # f1 : 0.7052005589723838
 
+    repeat = 10
+    pred_test = 0
+
+    for _ in range(repeat):
+        pred_test += model.predict(X_test)
+
+    pred_test = np.argmax(pred_test, axis=-1)
+
+    f1 = f1_score(Y_test, pred_test, average="macro")
+
+    acc = accuracy_score(Y_test, pred_test)
+
+    print("ensemble acc :", acc)
+    print("ensemble f1 :", f1)
