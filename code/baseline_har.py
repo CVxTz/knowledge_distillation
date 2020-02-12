@@ -19,7 +19,7 @@ if __name__ == "__main__":
     X_eval = np.loadtxt("../input/har/test/X_test.txt", dtype=np.float)
     Y_eval = np.loadtxt("../input/har/test/y_test.txt", dtype=np.float)
 
-    X_test, X_val, Y_test, Y_val = train_test_split(X_eval, Y_eval, test_size=0.2, random_state=1337)
+    X_test, X_val, Y_test, Y_val = train_test_split(X_eval, Y_eval, test_size=0.2, random_state=1337, stratify=Y_eval)
 
     Y_train = np.array(Y_train).astype(np.int8)[..., np.newaxis] - 1
     X_train = np.array(X_train)
