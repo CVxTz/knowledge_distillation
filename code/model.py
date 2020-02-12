@@ -8,7 +8,7 @@ def PermaDropout(rate):
 
 
 def get_model(do_rate=0.2, use_normal_dropout=True):
-    nclass = 5
+    n_class = 5
     inp = Input(shape=(187, 1))
     x = Convolution1D(64, kernel_size=5, activation=activations.relu, padding="valid")(inp)
     x = Convolution1D(64, kernel_size=5, activation=activations.relu, padding="valid")(x)
@@ -31,7 +31,32 @@ def get_model(do_rate=0.2, use_normal_dropout=True):
     x = Dropout(rate=do_rate)(x) if use_normal_dropout else PermaDropout(rate=do_rate)(x)
     x = Dense(64, activation=activations.relu, name="dense_2")(x)
     x = Dropout(rate=do_rate)(x) if use_normal_dropout else PermaDropout(rate=do_rate)(x)
-    x = Dense(nclass, activation=activations.softmax, name="dense_3_mitbih")(x)
+    x = Dense(n_class, activation=activations.softmax, name="dense_3_mitbih")(x)
+
+    model = models.Model(inputs=inp, outputs=x)
+    opt = optimizers.Adam(0.0001)
+
+    model.compile(optimizer=opt, loss=losses.sparse_categorical_crossentropy, metrics=['acc'])
+    model.summary()
+    return model
+
+
+def get_mlp_model(do_rate=0.2, use_normal_dropout=True):
+    n_class = 6
+    inp = Input(shape=(561,))
+    x = Dense(256, activation=activations.relu)(inp)
+    x = Dropout(rate=do_rate)(x) if use_normal_dropout else PermaDropout(rate=do_rate)(x)
+
+    x = Dense(256, activation=activations.relu)(x)
+    x = Dropout(rate=do_rate)(x) if use_normal_dropout else PermaDropout(rate=do_rate)(x)
+
+    x = Dense(64, activation=activations.relu)(x)
+    x = Dropout(rate=do_rate)(x) if use_normal_dropout else PermaDropout(rate=do_rate)(x)
+
+    x = Dense(64, activation=activations.relu)(x)
+    x = Dropout(rate=do_rate)(x) if use_normal_dropout else PermaDropout(rate=do_rate)(x)
+
+    x = Dense(n_class, activation=activations.softmax)(x)
 
     model = models.Model(inputs=inp, outputs=x)
     opt = optimizers.Adam(0.0001)
