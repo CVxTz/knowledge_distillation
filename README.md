@@ -1,2 +1,2 @@
 # knowledge_distillation
-Knowledge Distillation in Pytorch
+Knowledge Distillation in Keras
