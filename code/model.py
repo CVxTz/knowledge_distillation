@@ -7,40 +7,6 @@ def get_model(do_rate=0.2):
     n_class = 5
     inp = Input(shape=(187, 1))
     x = Convolution1D(64, kernel_size=5, activation=activations.relu, padding="valid")(inp)
-    x = Convolution1D(64, kernel_size=5, activation=activations.relu, padding="valid")(x)
-    x = MaxPool1D(pool_size=2)(x)
-    x = Dropout(rate=do_rate)(x)
-    x = Convolution1D(64, kernel_size=3, activation=activations.relu, padding="valid")(x)
-    x = Convolution1D(64, kernel_size=3, activation=activations.relu, padding="valid")(x)
-    x = MaxPool1D(pool_size=2)(x)
-    x = Dropout(rate=do_rate)(x)
-    x = Convolution1D(64, kernel_size=3, activation=activations.relu, padding="valid")(x)
-    x = Convolution1D(64, kernel_size=3, activation=activations.relu, padding="valid")(x)
-    x = MaxPool1D(pool_size=2)(x)
-    x = Dropout(rate=do_rate)(x)
-    x = Convolution1D(256, kernel_size=3, activation=activations.relu, padding="valid")(x)
-    x = Convolution1D(256, kernel_size=3, activation=activations.relu, padding="valid")(x)
-    x = GlobalMaxPool1D()(x)
-    x = Dropout(rate=do_rate)(x)
-
-    x = Dense(64, activation=activations.relu, name="dense_1")(x)
-    x = Dropout(rate=do_rate)(x)
-    x = Dense(64, activation=activations.relu, name="dense_2")(x)
-    x = Dropout(rate=do_rate)(x)
-    x = Dense(n_class, activation=activations.softmax, name="dense_3_mitbih")(x)
-
-    model = models.Model(inputs=inp, outputs=x)
-    opt = optimizers.Adam(0.0001)
-
-    model.compile(optimizer=opt, loss=losses.sparse_categorical_crossentropy, metrics=['acc'])
-    model.summary()
-    return model
-
-
-def get_small_model(do_rate=0.2):
-    n_class = 5
-    inp = Input(shape=(187, 1))
-    x = Convolution1D(64, kernel_size=5, activation=activations.relu, padding="valid")(inp)
     x = MaxPool1D(pool_size=4)(x)
     x = Dropout(rate=do_rate)(x)
     x = Convolution1D(64, kernel_size=3, activation=activations.relu, padding="valid")(x)
@@ -56,6 +22,48 @@ def get_small_model(do_rate=0.2):
     opt = optimizers.Adam(0.0001)
 
     model.compile(optimizer=opt, loss=losses.sparse_categorical_crossentropy, metrics=['acc'])
+    model.summary()
+    return model
+
+
+def get_small_model(do_rate=0.2):
+    n_class = 5
+    inp = Input(shape=(187, 1))
+    x = Convolution1D(16, kernel_size=5, activation=activations.relu, padding="valid")(inp)
+    x = MaxPool1D(pool_size=4)(x)
+    x = Dropout(rate=do_rate)(x)
+    x = Convolution1D(16, kernel_size=3, activation=activations.relu, padding="valid")(x)
+    x = MaxPool1D(pool_size=4)(x)
+    x = Dropout(rate=do_rate)(x)
+    x = GlobalMaxPool1D()(x)
+    x = Dropout(rate=do_rate)(x)
+    x = Dense(16, activation=activations.relu)(x)
+    x = Dropout(rate=do_rate)(x)
+    x = Dense(n_class, activation=activations.softmax)(x)
+
+    model = models.Model(inputs=inp, outputs=x)
+    opt = optimizers.Adam(0.0001)
+
+    model.compile(optimizer=opt, loss=losses.sparse_categorical_crossentropy, metrics=['acc'])
+    model.summary()
+    return model
+
+
+def get_kd_model(do_rate=0.2):
+    n_class = 5
+    inp = Input(shape=(187, 1))
+    x = Convolution1D(16, kernel_size=5, activation=activations.relu, padding="valid")(inp)
+    x = MaxPool1D(pool_size=4)(x)
+    x = Convolution1D(16, kernel_size=3, activation=activations.relu, padding="valid")(x)
+    x = MaxPool1D(pool_size=4)(x)
+    x = GlobalMaxPool1D()(x)
+    x = Dense(16, activation=activations.relu)(x)
+    x = Dense(n_class, activation=activations.softmax)(x)
+
+    model = models.Model(inputs=inp, outputs=x)
+    opt = optimizers.Adam(0.0001)
+
+    model.compile(optimizer=opt, loss=losses.mae, metrics=['acc'])
     model.summary()
     return model
 

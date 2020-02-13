@@ -3,7 +3,8 @@ import pandas as pd
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
-
+import os
+import json
 from model import get_small_model
 
 if __name__ == "__main__":
@@ -42,6 +43,11 @@ if __name__ == "__main__":
 
     print("acc :", acc)
     print("f1 :", f1)
-    # acc : 0.9582024781590818
-    # f1 : 0.7052005589723838
+
+    rnd = np.random.randint(1, 100000)
+    os.makedirs('../output/ecg/', exist_ok=True)
+
+    with open('../output/ecg/small_performance_%s.json' % int(rnd), 'w') as f:
+        json.dump({"acc": acc, "f1": f1}, f, indent=4)
+
 

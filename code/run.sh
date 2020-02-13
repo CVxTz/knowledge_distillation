@@ -1,6 +1,5 @@
-for i in {0..5}
+for i in {0..3}
 do
-python baseline_har.py > baseline_har.txt
-python ensemble_har.py > ensemble_har.txt
-#python permado_har.py > permado_har.txt
+python small_ecg.py > small_ecg.txt
+python baseline_ecg.py > baseline_ecg.txt
 done
