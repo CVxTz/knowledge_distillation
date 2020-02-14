@@ -54,16 +54,20 @@ def get_kd_model(do_rate=0.2):
     inp = Input(shape=(187, 1))
     x = Convolution1D(32, kernel_size=5, activation=activations.relu, padding="valid")(inp)
     x = MaxPool1D(pool_size=4)(x)
+    x = Dropout(rate=do_rate)(x)
     x = Convolution1D(32, kernel_size=3, activation=activations.relu, padding="valid")(x)
     x = MaxPool1D(pool_size=4)(x)
+    x = Dropout(rate=do_rate)(x)
     x = GlobalMaxPool1D()(x)
+    x = Dropout(rate=do_rate)(x)
     x = Dense(16, activation=activations.relu)(x)
+    x = Dropout(rate=do_rate)(x)
     x = Dense(n_class, activation=activations.softmax)(x)
 
     model = models.Model(inputs=inp, outputs=x)
     opt = optimizers.Adam(0.0001)
 
-    model.compile(optimizer=opt, loss=losses.mae, metrics=['acc'])
+    model.compile(optimizer=opt, loss=losses.kullback_leibler_divergence, metrics=['acc'])
     model.summary()
     return model
 
