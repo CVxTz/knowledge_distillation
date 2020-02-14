@@ -63,6 +63,12 @@ def get_small_model(do_rate=0.2, n_class=5):
     return model
 
 
+def custom_loss(y_true, y_pred, mae_weight=0.1):
+    return losses.kullback_leibler_divergence(y_true, y_pred) + mae_weight * losses.mae(
+        y_true, y_pred
+    )
+
+
 def get_kd_model(do_rate=0.2, n_class=5):
     inp = Input(shape=(187, 1))
     x = Convolution1D(32, kernel_size=5, activation=activations.relu, padding="valid")(

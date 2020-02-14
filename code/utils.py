@@ -12,8 +12,9 @@ def gen(X, Y, batch_size=64):
         shuffle(indexes)
         alphas = np.random.beta(0.2, 0.2, size=X.shape[0]).tolist()
         for batch_indexes_1, batch_indexes_2, alphas_batch in zip(
-            chunker(indexes, size=batch_size), chunker(indexes[::-1], size=batch_size),
-                chunker(alphas, size=batch_size)
+            chunker(indexes, size=batch_size),
+            chunker(indexes[::-1], size=batch_size),
+            chunker(alphas, size=batch_size),
         ):
 
             X_1 = [X[i, ...] for i in batch_indexes_1]
