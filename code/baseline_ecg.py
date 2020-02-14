@@ -42,7 +42,7 @@ if __name__ == "__main__":
         gen(X_train, Y_train, batch_size=64),
         validation_data=gen(X_val, Y_val, batch_size=64),
         epochs=1000,
-        verbose=1,
+        verbose=2,
         callbacks=[checkpoint, reduce, early],
         steps_per_epoch=X_train.shape[0] // 64,
         validation_steps=X_val.shape[0] // 64,
