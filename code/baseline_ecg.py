@@ -32,15 +32,21 @@ if __name__ == "__main__":
 
     model = get_model()
 
-    checkpoint = ModelCheckpoint(file_path, monitor='val_loss', verbose=1, save_best_only=True, mode="min")
+    checkpoint = ModelCheckpoint(
+        file_path, monitor="val_loss", verbose=1, save_best_only=True, mode="min"
+    )
     reduce = ReduceLROnPlateau(monitor="val_loss", patience=10, min_lr=1e-7, mode="min")
     early = EarlyStopping(monitor="val_loss", patience=30, mode="min")
 
-    model.fit_generator(gen(X_train, Y_train, batch_size=64),
-                        validation_data=gen(X_val, Y_val, batch_size=64),
-                        epochs=1000, verbose=1, callbacks=[checkpoint, reduce, early],
-                        steps_per_epoch=X_train.shape[0]//64, validation_steps=X_val.shape[0]//64)
-
+    model.fit_generator(
+        gen(X_train, Y_train, batch_size=64),
+        validation_data=gen(X_val, Y_val, batch_size=64),
+        epochs=1000,
+        verbose=1,
+        callbacks=[checkpoint, reduce, early],
+        steps_per_epoch=X_train.shape[0] // 64,
+        validation_steps=X_val.shape[0] // 64,
+    )
 
     pred_test = model.predict(X_test)
     pred_test = np.argmax(pred_test, axis=-1)
@@ -53,8 +59,7 @@ if __name__ == "__main__":
     print("f1 :", f1)
 
     rnd = np.random.randint(1, 100000)
-    os.makedirs('../output/ecg/', exist_ok=True)
+    os.makedirs("../output/ecg/", exist_ok=True)
 
-    with open('../output/ecg/baseline_performance_%s.json' % int(rnd), 'w') as f:
+    with open("../output/ecg/baseline_performance_%s.json" % int(rnd), "w") as f:
         json.dump({"acc": acc, "f1": f1}, f, indent=4)
-

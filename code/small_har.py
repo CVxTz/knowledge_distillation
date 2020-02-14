@@ -19,7 +19,9 @@ if __name__ == "__main__":
     X_eval = np.loadtxt("../input/har/test/X_test.txt", dtype=np.float)
     Y_eval = np.loadtxt("../input/har/test/y_test.txt", dtype=np.float)
 
-    X_test, X_val, Y_test, Y_val = train_test_split(X_eval, Y_eval, test_size=0.2, random_state=1337, stratify=Y_eval)
+    X_test, X_val, Y_test, Y_val = train_test_split(
+        X_eval, Y_eval, test_size=0.2, random_state=1337, stratify=Y_eval
+    )
 
     Y_train = np.array(Y_train).astype(np.int8)[..., np.newaxis] - 1
     X_train = np.array(X_train)
@@ -32,12 +34,21 @@ if __name__ == "__main__":
 
     model = get_small_mlp_model()
 
-    checkpoint = ModelCheckpoint(file_path, monitor='val_loss', verbose=1, save_best_only=True, mode="min")
+    checkpoint = ModelCheckpoint(
+        file_path, monitor="val_loss", verbose=1, save_best_only=True, mode="min"
+    )
     reduce = ReduceLROnPlateau(monitor="val_loss", patience=10, min_lr=1e-7, mode="min")
     early = EarlyStopping(monitor="val_loss", patience=30, mode="min")
 
-    model.fit(X_train, Y_train, validation_data=(X_val, Y_val), epochs=1000, verbose=2, batch_size=64,
-              callbacks=[checkpoint, reduce, early])
+    model.fit(
+        X_train,
+        Y_train,
+        validation_data=(X_val, Y_val),
+        epochs=1000,
+        verbose=2,
+        batch_size=64,
+        callbacks=[checkpoint, reduce, early],
+    )
 
     pred_test = model.predict(X_test)
     pred_test = np.argmax(pred_test, axis=-1)
@@ -50,7 +61,7 @@ if __name__ == "__main__":
     print("f1 :", f1)
 
     rnd = np.random.randint(1, 100000)
-    os.makedirs('../output/har/', exist_ok=True)
+    os.makedirs("../output/har/", exist_ok=True)
 
-    with open('../output/har/small_performance_%s.json' % int(rnd), 'w') as f:
+    with open("../output/har/small_performance_%s.json" % int(rnd), "w") as f:
         json.dump({"acc": acc, "f1": f1}, f, indent=4)
