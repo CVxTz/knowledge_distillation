@@ -3,8 +3,7 @@ from tensorflow.keras import optimizers, losses, activations, models
 from tensorflow.keras.layers import Dense, Input, Dropout, Convolution1D, MaxPool1D, GlobalMaxPool1D, Lambda
 
 
-def get_model(do_rate=0.2):
-    n_class = 5
+def get_model(do_rate=0.2, n_class=5):
     inp = Input(shape=(187, 1))
     x = Convolution1D(64, kernel_size=5, activation=activations.relu, padding="valid")(inp)
     x = MaxPool1D(pool_size=4)(x)
@@ -21,13 +20,12 @@ def get_model(do_rate=0.2):
     model = models.Model(inputs=inp, outputs=x)
     opt = optimizers.Adam(0.0001)
 
-    model.compile(optimizer=opt, loss=losses.sparse_categorical_crossentropy, metrics=['acc'])
+    model.compile(optimizer=opt, loss=losses.categorical_crossentropy, metrics=['acc'])
     model.summary()
     return model
 
 
-def get_small_model(do_rate=0.2):
-    n_class = 5
+def get_small_model(do_rate=0.2, n_class=5):
     inp = Input(shape=(187, 1))
     x = Convolution1D(32, kernel_size=5, activation=activations.relu, padding="valid")(inp)
     x = MaxPool1D(pool_size=4)(x)
@@ -44,13 +42,12 @@ def get_small_model(do_rate=0.2):
     model = models.Model(inputs=inp, outputs=x)
     opt = optimizers.Adam(0.0001)
 
-    model.compile(optimizer=opt, loss=losses.sparse_categorical_crossentropy, metrics=['acc'])
+    model.compile(optimizer=opt, loss=losses.categorical_crossentropy, metrics=['acc'])
     model.summary()
     return model
 
 
-def get_kd_model(do_rate=0.2):
-    n_class = 5
+def get_kd_model(do_rate=0.2, n_class=5):
     inp = Input(shape=(187, 1))
     x = Convolution1D(32, kernel_size=5, activation=activations.relu, padding="valid")(inp)
     x = MaxPool1D(pool_size=4)(x)

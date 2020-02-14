@@ -8,31 +8,12 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 
 from model import get_model, get_kd_model
-
-
-def gen(X, Y, batch_size=64):
-    indexes = list(range(X.shape[0]))
-    while True:
-        batch_indexes_1 = np.random.choice(indexes, size=batch_size).tolist()
-        batch_indexes_2 = np.random.choice(indexes, size=batch_size).tolist()
-        alphas = np.random.uniform(0, 1, size=batch_size).tolist()
-
-        X_1 = [X[i, ...] for i in batch_indexes_1]
-        X_2 = [X[i, ...] for i in batch_indexes_2]
-
-        Y_1 = [Y[i, ...] for i in batch_indexes_1]
-        Y_2 = [Y[i, ...] for i in batch_indexes_2]
-
-        X_batch = [l * a + (1 - l) * b for a, b, l in zip(X_1, X_2, alphas)]
-
-        Y_batch = [l * a + (1 - l) * b for a, b, l in zip(Y_1, Y_2, alphas)]
-
-        yield np.array(X_batch), np.array(Y_batch)
-
+from utils import gen
 
 if __name__ == "__main__":
     file_path_source = "baseline.h5"
     file_path_kd = "kd.h5"
+    n_class = 5
 
     df_train = pd.read_csv("../input/mitbih_train.csv", header=None)
     df = pd.read_csv("../input/mitbih_test.csv", header=None)
@@ -40,13 +21,16 @@ if __name__ == "__main__":
     df_test, df_val = train_test_split(df, test_size=0.2, random_state=1337)
 
     Y_train = np.array(df_train[187].values).astype(np.int8)
-    X_train = np.array(df_train[list(range(187))].values)[..., np.newaxis]
+    X_train = np.array(df_train[list(range(187))].values)
+    Y_train = np.eye(n_class)[Y_train]
 
     Y_val = np.array(df_val[187].values).astype(np.int8)
     X_val = np.array(df_val[list(range(187))].values)[..., np.newaxis]
+    Y_val = np.eye(n_class)[Y_val]
 
     Y_test = np.array(df_test[187].values).astype(np.int8)
     X_test = np.array(df_test[list(range(187))].values)[..., np.newaxis]
+    Y_test = np.eye(n_class)[Y_test]
 
     model_source = get_model()
     model_source.load_weights(file_path_source)
