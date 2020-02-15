@@ -69,22 +69,18 @@ def custom_loss(y_true, y_pred, mae_weight=0.1):
     )
 
 
-def get_kd_model(do_rate=0.2, n_class=5):
+def get_kd_model(n_class=5):
     inp = Input(shape=(187, 1))
     x = Convolution1D(32, kernel_size=5, activation=activations.relu, padding="valid")(
         inp
     )
     x = MaxPool1D(pool_size=4)(x)
-    x = Dropout(rate=do_rate)(x)
     x = Convolution1D(32, kernel_size=3, activation=activations.relu, padding="valid")(
         x
     )
     x = MaxPool1D(pool_size=4)(x)
-    x = Dropout(rate=do_rate)(x)
     x = GlobalMaxPool1D()(x)
-    x = Dropout(rate=do_rate)(x)
     x = Dense(16, activation=activations.relu)(x)
-    x = Dropout(rate=do_rate)(x)
     x = Dense(n_class, activation=activations.softmax)(x)
 
     model = models.Model(inputs=inp, outputs=x)
@@ -92,42 +88,6 @@ def get_kd_model(do_rate=0.2, n_class=5):
 
     model.compile(
         optimizer=opt, loss=losses.kullback_leibler_divergence, metrics=["acc"]
-    )
-    model.summary()
-    return model
-
-
-def get_mlp_model(do_rate=0.2):
-    n_class = 6
-    inp = Input(shape=(561,))
-    x = Dense(64, activation=activations.relu)(inp)
-    x = Dropout(rate=do_rate)(x)
-
-    x = Dense(32, activation=activations.relu)(x)
-    x = Dropout(rate=do_rate)(x)
-    x = Dense(n_class, activation=activations.softmax)(x)
-    model = models.Model(inputs=inp, outputs=x)
-    opt = optimizers.Adam(0.0001)
-
-    model.compile(
-        optimizer=opt, loss=losses.sparse_categorical_crossentropy, metrics=["acc"]
-    )
-    model.summary()
-    return model
-
-
-def get_small_mlp_model(do_rate=0.2):
-    n_class = 6
-    inp = Input(shape=(561,))
-    x = Dense(8, activation=activations.relu)(inp)
-    x = Dropout(rate=do_rate)(x)
-    x = Dense(n_class, activation=activations.softmax)(x)
-
-    model = models.Model(inputs=inp, outputs=x)
-    opt = optimizers.Adam(0.0001)
-
-    model.compile(
-        optimizer=opt, loss=losses.sparse_categorical_crossentropy, metrics=["acc"]
     )
     model.summary()
     return model
