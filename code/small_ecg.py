@@ -1,15 +1,16 @@
+import json
+import os
+
 import numpy as np
 import pandas as pd
+import tensorflow.keras.backend as K
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
-import os
-import json
-from model import get_small_model
-from utils import gen, get_mixup
 from tqdm import tqdm
-import tensorflow.keras.backend as K
 
+from model import get_small_model
+from utils import get_mixup
 
 if __name__ == "__main__":
     file_path = "small.h5"
@@ -39,7 +40,7 @@ if __name__ == "__main__":
     reduce = ReduceLROnPlateau(monitor="val_loss", patience=10, min_lr=1e-7, mode="min")
     early = EarlyStopping(monitor="val_loss", patience=30, mode="min")
 
-    for i in tqdm(range(150)):
+    for i in tqdm(range(300)):
         X_new, Y_new = get_mixup(X_train, Y_train)
         model.fit(
             X_train,

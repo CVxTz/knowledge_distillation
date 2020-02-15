@@ -3,15 +3,14 @@ import os
 
 import numpy as np
 import pandas as pd
+import tensorflow.keras.backend as K
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
+from tqdm import tqdm
 
 from model import get_model, get_kd_model
-from utils import gen, get_mixup
-from tqdm import tqdm
-import tensorflow.keras.backend as K
-
+from utils import get_mixup
 
 if __name__ == "__main__":
     file_path_source = "baseline.h5"

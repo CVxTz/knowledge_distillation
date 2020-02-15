@@ -1,7 +1,7 @@
 import json
 from glob import glob
-import numpy as np
 
+import numpy as np
 
 if __name__ == "__main__":
     base_path = "../output/ecg/"
