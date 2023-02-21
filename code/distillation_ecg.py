@@ -47,11 +47,11 @@ if __name__ == "__main__":
     early = EarlyStopping(monitor="val_loss", patience=30, mode="min")
 
     for i in tqdm(range(300)):
-        X_new, Y_new = get_mixup(X_train, Y_train)
+        X_new, Y_new = get_mixup(X_train, Y_train_pred)
         model.fit(
             X_train,
             Y_train,
-            validation_data=(X_val, Y_val),
+            validation_data=(X_val, Y_val_pred),
             epochs=2,
             verbose=2,
             callbacks=[checkpoint, reduce, early],
