@@ -1,5 +1,5 @@
 pandas==0.25.2
-tensorflow_gpu==2.0.0
+tensorflow_gpu==2.12.0
 numpy==1.17.3
 tqdm==4.36.1
 scikit_learn==0.22.1
